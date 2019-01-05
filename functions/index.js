@@ -19,6 +19,7 @@
 const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion} = require('dialogflow-fulfillment');
+const knowsupplier1 = require('./working-xml-post-ics');
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
@@ -53,7 +54,59 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   //   agent.add(new Suggestion(`Suggestion`));
   //   agent.setContext({ name: 'weather', lifespan: 2, parameters: { city: 'Rome' }});
   // }
+  
+    function allApproval(agent) {
+    //const city = agent.parameters['geo-city'];
+    //const time = agent.parameters['time'];
+    //const gotCity = city.length > 0;
+    //const gotTime = time.length > 0;
 
+    /*if(gotCity && gotTime) {
+        agent.add(`Nice, you want to fly to ${city} at ${time}.`);
+    } else if (gotCity && !gotTime) {
+        agent.add('Let me know which time you want to fly');
+    } else if (gotTime && !gotCity) {
+        agent.add('Let me know which city you want to fly to');
+    } else {
+        agent.add('Let me know which city and time you want to fly');
+    }*/
+	//agent.add('PO is approved');
+  
+  knowsupplier1(function(knowsupplierresp){
+				if (!knowsupplierresp) {
+					//console.log("In if (!knowsupplierresp) {")
+						agent.add('In if (!knowsupplierresp) {');
+				} 
+				else {
+					suppresp = knowsupplierresp;
+					//console.log("In Else of (!knowsupplierresp)");
+					agent.add('In if (!knowsupplierresp) {');
+                    /*let replies = [
+						{
+							"content_type": "text",
+							"title": "Start all over",
+							"payload": "Start all over"
+						},
+						{
+							"content_type": "text",
+							"title": "Know Supplier",
+							"payload": "Know Supplier"
+						},
+						{
+							"content_type": "text",
+							"title": "Not Right Now",
+							"payload": "Not Right Now"
+						}
+					];*/
+					//console.log('in else of isDefined(action) && action==buyerstartevaluation');
+					//sendQuickReply(sender, suppresp + "What would you want to do next?", replies);
+					
+					//console.log("The Supplier details for "+contexts[0].parameters['suppliername']+" are"+suppresp)			
+				}		
+			}, //contexts[0].parameters['suppliername'])
+			'IOP')
+				;
+}
   // // Uncomment and edit to make your own Google Assistant intent handler
   // // uncomment `intentMap.set('your intent name here', googleAssistantHandler);`
   // // below to get this function to be run when a Dialogflow intent is matched
@@ -67,7 +120,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
-  // intentMap.set('<INTENT_NAME_HERE>', yourFunctionHandler);
+  intentMap.set('AllApproval', allApproval);
   // intentMap.set('<INTENT_NAME_HERE>', googleAssistantHandler);
   agent.handleRequest(intentMap);
 });
